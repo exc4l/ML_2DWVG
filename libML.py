@@ -240,16 +240,17 @@ def get_easy_model(
     output_shape,
     layer_activation="relu",
     result_activation="linear",
+    kernel_regu=None,
     optimizer="sgd",
     loss="mse",
-    compile=True,
+    compile=False,
 ):
     if not isinstance(input_shape, tuple):
         raise TypeError("Input shape needs to be a tuple")
     model = tf.keras.Sequential()
-    model.add(tf.keras.Input(shape=input_shape))
+    model.add(tf.keras.layers.InputLayer(input_shape=input_shape))
     for n in neuron_list:
-        model.add(Dense(n, activation=layer_activation))
+        model.add(Dense(n, activation=layer_activation, kernel_regularizer=kernel_regu))
     model.add(Dense(output_shape, activation=result_activation))
     if compile:
         model.compile(optimizer=optimizer, loss=loss)
